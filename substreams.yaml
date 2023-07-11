@@ -1,0 +1,31 @@
+specVersion: v0.1.0
+package:
+  name: "substreams_template"
+  version: v0.1.0
+
+protobuf:
+  files:
+    - rocketpool.proto
+  importPaths:
+    - ./proto
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
+
+modules:
+  - name: map_transfer
+    kind: map
+    initialBlock: 12287507
+    inputs:
+      - source: sf.ethereum.type.v2.Block
+    output:
+      type: proto:eth.usdc.v1.Transfers
+
+  - name: graph_out
+    kind: map
+    inputs:
+      - map: map_transfer
+    output:
+      type: proto:substreams.entity.v1.EntityChanges
